@@ -19,6 +19,7 @@ services:
       retries: 10
 
   app:
+    image: ghcr.io/charset-8utf/tinder-bot:${TINDERBOT_TAG:-latest}
     build: .
     depends_on:
       postgres:

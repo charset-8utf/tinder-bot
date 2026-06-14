@@ -103,6 +103,7 @@ Telegram и REST используют общий слой `service/` и хран
 | Режим                      | URL                     | Команда                                           |
 |----------------------------|-------------------------|---------------------------------------------------|
 | **Docker** (рекомендуется) | `http://localhost:8080` | `docker compose up --build`                       |
+| **GHCR-образ**               | тот же                  | `docker compose pull app && docker compose up -d` |
 | Swagger UI                 | `/swagger-ui.html`      | после старта приложения                           |
 | OpenAPI JSON               | `/v3/api-docs`          | стандартный путь SpringDoc                        |
 | Health                     | `/actuator/health`      | readiness/liveness                                |
@@ -140,9 +141,23 @@ cp .env.example .env
 
 ### 2. Сборка и запуск
 
+**Локальная сборка** (из исходников):
+
 ```bash
 docker compose up --build
 ```
+
+**Готовый образ из GitHub Packages** (после успешного CI на `main`):
+
+```bash
+docker compose pull app
+docker compose up -d
+```
+
+Образ: [`ghcr.io/charset-8utf/tinder-bot:latest`](https://github.com/charset-8utf/tinder-bot/pkgs/container/tinder-bot).  
+Тег можно сменить через `TINDERBOT_TAG` в `.env` (например `sha-799eecd`).
+
+> После первой публикации откройте **Packages → tinder-bot → Package settings → Change visibility → Public**, иначе `docker pull` с других машин потребует `docker login ghcr.io`.
 
 Стек: `postgres:16-alpine` + Spring Boot app (`SPRING_PROFILES_ACTIVE=docker`).
 
@@ -347,11 +362,28 @@ tinder-bot/
 
 ```bash
 docker compose up --build -d    # пересобрать и запустить в фоне
+docker compose pull app         # подтянуть образ из GHCR
 docker compose ps               # статус контейнеров (ожидается healthy)
 docker compose logs -f app
 docker compose down
 docker compose down -v          # пересоздать БД (сброс кредов из .env)
 mvn clean test                  # unit + integration
+```
+
+### GitHub Packages (GHCR)
+
+CI на ветке `main` публикует Docker-образ в [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry):
+
+| Тег | Когда появляется |
+|-----|------------------|
+| `latest` | каждый push в `main` |
+| `sha-<commit>` | каждый push в `main` |
+| `v1.0.0` … | git-тег `v*` (release) |
+
+Логин для приватного пакета:
+
+```bash
+echo "$GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
 ```
 
 Быстрая проверка после Docker-старта:
