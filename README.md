@@ -14,6 +14,8 @@
 ![OpenAPI](https://img.shields.io/badge/OpenAPI-3-green?logo=swagger)
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)
 
+![CI](https://github.com/charset-8utf/tinder-bot/actions/workflows/ci.yml/badge.svg?branch=main)
+
 Telegram-бот для знакомств с **REST API**, **OpenAPI** и **Docker Compose**.  
 Монолит на **Spring Boot 4** (Java 21, Maven): профиль, opener, переписка, GPT, режим DATE.
 
