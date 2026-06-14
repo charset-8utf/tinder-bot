@@ -1,0 +1,75 @@
+### TinderBot REST
+### Environment: local (см. requests/http-client.env.json)
+### 1) Выберите environment "local" в выпадающем списке HTTP Client
+### 2) Сначала выполните "JWT login" — токен сохранится в {{jwt}}
+
+### --- JWT login ---
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+> {%
+    client.global.set("jwt", response.body.accessToken);
+%}
+
+### --- Sessions ---
+GET {{baseUrl}}/sessions/{{chatId}}
+Authorization: Bearer {{jwt}}
+
+### --- PATCH mode ---
+PATCH {{baseUrl}}/sessions/{{chatId}}/mode
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{
+  "mode": "GPT"
+}
+
+### --- PROFILE questionnaire ---
+POST {{baseUrl}}/sessions/{{chatId}}/questionnaires/PROFILE/start
+Authorization: Bearer {{jwt}}
+
+### --- GPT message ---
+POST {{baseUrl}}/sessions/{{chatId}}/gpt/messages
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{
+  "question": "Как начать разговор на свидании?"
+}
+
+### --- DATE message (first message needs starKey) ---
+POST {{baseUrl}}/sessions/{{chatId}}/date/messages
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{
+  "message": "Привет! Как насчёт кофе?",
+  "starKey": "date_grande"
+}
+
+### --- DATE follow-up ---
+POST {{baseUrl}}/sessions/{{chatId}}/date/messages
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{
+  "message": "Расскажи о себе"
+}
+
+### --- Message history + next ---
+POST {{baseUrl}}/sessions/{{chatId}}/messages
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{
+  "text": "Привет, как дела?"
+}
+
+###
+POST {{baseUrl}}/sessions/{{chatId}}/messages/next
+Authorization: Bearer {{jwt}}
