@@ -18,15 +18,17 @@ class MessageViewTest {
     }
 
     @Test
-    void getWelcomeText_shouldLoadMainMessage() {
+    void getWelcomeText_shouldLoadMainMessageWithHtmlFormatting() {
         String text = messageView.getWelcomeText();
         assertThat(text).isNotEmpty();
+        assertThat(text).contains("<b>Telegram</b>", "<b>ChatGPT</b>", "<b>Tinder</b>");
     }
 
     @Test
-    void getGptMessage_shouldLoadGptMessage() {
+    void getGptMessage_shouldLoadGptMessageWithHtmlFormatting() {
         String text = messageView.getGptMessage();
         assertThat(text).isNotEmpty();
+        assertThat(text).contains("<b>ChatGPT</b>");
     }
 
     @Test

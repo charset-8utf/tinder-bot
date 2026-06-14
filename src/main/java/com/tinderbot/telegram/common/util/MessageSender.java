@@ -22,10 +22,19 @@ public class MessageSender {
     }
 
     /**
-     * Отправляет текстовое сообщение и сохраняет его ID в списке botMessageIds.
+     * Отправляет plain-text сообщение и сохраняет его ID в списке botMessageIds.
      */
     public Message sendAndSaveText(MultiSessionTelegramBot bot, Long chatId, String text) {
         Message textMsg = bot.sendTextMessage(text);
+        telegramUi.addBotMessageId(chatId, textMsg.getMessageId());
+        return textMsg;
+    }
+
+    /**
+     * Отправляет HTML-сообщение (шаблоны из resources/messages) и сохраняет его ID.
+     */
+    public Message sendAndSaveHtmlText(MultiSessionTelegramBot bot, Long chatId, String htmlText) {
+        Message textMsg = bot.sendHtmlMessage(htmlText);
         telegramUi.addBotMessageId(chatId, textMsg.getMessageId());
         return textMsg;
     }
@@ -40,11 +49,19 @@ public class MessageSender {
     }
 
     /**
-     * Отправляет сообщение с инлайн-кнопками и сохраняет его ID как currentMenuMessageId.
-     * Используется для главного меню или другого постоянного меню.
+     * Отправляет plain-text меню и сохраняет его ID как currentMenuMessageId.
      */
     public Message sendAndSaveMenu(MultiSessionTelegramBot bot, Long chatId, String text, String... buttons) {
         Message menuMsg = bot.sendTextButtonsMessage(text, buttons);
+        telegramUi.setCurrentMenuMessageId(chatId, menuMsg.getMessageId());
+        return menuMsg;
+    }
+
+    /**
+     * Отправляет HTML-меню и сохраняет его ID как currentMenuMessageId.
+     */
+    public Message sendAndSaveHtmlMenu(MultiSessionTelegramBot bot, Long chatId, String htmlText, String... buttons) {
+        Message menuMsg = bot.sendHtmlButtonsMessage(htmlText, buttons);
         telegramUi.setCurrentMenuMessageId(chatId, menuMsg.getMessageId());
         return menuMsg;
     }

@@ -57,7 +57,7 @@ class OpenerModeHandlerTest {
     void onCommand_shouldResetAndSendWelcome() {
         when(messageView.getOpenerIntro()).thenReturn("opener intro");
         when(messageSender.sendAndSavePhoto(bot, 1L, ResourceConstants.IMAGE_OPENER)).thenReturn(mock(Message.class));
-        when(messageSender.sendAndSaveText(bot, 1L, "opener intro")).thenReturn(mock(Message.class));
+        when(messageSender.sendAndSaveHtmlText(bot, 1L, "opener intro")).thenReturn(mock(Message.class));
         when(messageSender.sendAndSaveButtons(any(), anyLong(), anyString(), any(String[].class))).thenReturn(mock(Message.class));
 
         handler.onCommand(bot, 1L);
@@ -66,7 +66,7 @@ class OpenerModeHandlerTest {
         verify(sessionService).setOpenerStep(1L, 0);
         verify(sessionService).setOpenerTemp(eq(1L), any(UserInfo.class));
         verify(messageSender).sendAndSavePhoto(bot, 1L, ResourceConstants.IMAGE_OPENER);
-        verify(messageSender).sendAndSaveText(bot, 1L, "opener intro");
+        verify(messageSender).sendAndSaveHtmlText(bot, 1L, "opener intro");
         verify(messageSender, times(1)).sendAndSaveButtons(any(), anyLong(), anyString(), any(String[].class));
         verify(sessionService).setCurrentMode(1L, DialogMode.OPENER);
     }

@@ -34,7 +34,7 @@ public class MainModeHandler implements com.tinderbot.telegram.api.ModeHandler {
         mainMenuService.openMainMenu(chatId);
 
         messageSender.sendAndSavePhoto(bot, chatId, ResourceConstants.IMAGE_MAIN);
-        messageSender.sendAndSaveText(bot, chatId, messageView.getWelcomeText());
+        messageSender.sendAndSaveHtmlText(bot, chatId, messageView.getWelcomeText());
         messageSender.sendAndSaveMenu(bot, chatId, messageView.getMenuTitle(), keyboardFactory.createMainMenuButtons());
     }
 

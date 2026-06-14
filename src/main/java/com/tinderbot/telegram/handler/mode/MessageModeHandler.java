@@ -34,7 +34,7 @@ public class MessageModeHandler implements ModeHandler {
         messageCleaner.deleteAllMessages(chatId, bot);
         messageDialogService.enterMessageMode(chatId);
         messageSender.sendAndSavePhoto(bot, chatId, ResourceConstants.IMAGE_MESSAGE);
-        messageSender.sendAndSaveText(bot, chatId, messageView.getMessageIntro());
+        messageSender.sendAndSaveHtmlText(bot, chatId, messageView.getMessageIntro());
 
         String[] buttons = {
                 "Пригласить на свидание", CallbackConstants.INVITE,

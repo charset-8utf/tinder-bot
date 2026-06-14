@@ -64,4 +64,26 @@ class MessageSenderTest {
 
         verify(telegramUi).setCurrentMenuMessageId(1L, 104);
     }
+
+    @Test
+    void sendAndSaveHtmlText_shouldAddBotMessageId() {
+        Message textMsg = mock(Message.class);
+        when(bot.sendHtmlMessage("<b>hello</b>")).thenReturn(textMsg);
+        when(textMsg.getMessageId()).thenReturn(105);
+
+        messageSender.sendAndSaveHtmlText(bot, 1L, "<b>hello</b>");
+
+        verify(telegramUi).addBotMessageId(1L, 105);
+    }
+
+    @Test
+    void sendAndSaveHtmlMenu_shouldSetCurrentMenuMessageId() {
+        Message menuMsg = mock(Message.class);
+        when(bot.sendHtmlButtonsMessage("<b>menu</b>", "btn1", "cb1")).thenReturn(menuMsg);
+        when(menuMsg.getMessageId()).thenReturn(106);
+
+        messageSender.sendAndSaveHtmlMenu(bot, 1L, "<b>menu</b>", "btn1", "cb1");
+
+        verify(telegramUi).setCurrentMenuMessageId(1L, 106);
+    }
 }

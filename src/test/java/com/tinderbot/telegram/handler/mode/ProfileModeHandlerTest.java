@@ -57,7 +57,7 @@ class ProfileModeHandlerTest {
     void onCommand_shouldResetAndSendWelcome() {
         when(messageView.getProfileIntro()).thenReturn("intro");
         when(messageSender.sendAndSavePhoto(bot, 1L, ResourceConstants.IMAGE_PROFILE)).thenReturn(mock(Message.class));
-        when(messageSender.sendAndSaveText(bot, 1L, "intro")).thenReturn(mock(Message.class));
+        when(messageSender.sendAndSaveHtmlText(bot, 1L, "intro")).thenReturn(mock(Message.class));
         when(messageSender.sendAndSaveButtons(any(), anyLong(), anyString(), any(String[].class))).thenReturn(mock(Message.class));
 
         handler.onCommand(bot, 1L);
@@ -66,7 +66,7 @@ class ProfileModeHandlerTest {
         verify(sessionService).setProfileStep(1L, 0);
         verify(sessionService).setProfileTemp(eq(1L), any(UserInfo.class));
         verify(messageSender).sendAndSavePhoto(bot, 1L, ResourceConstants.IMAGE_PROFILE);
-        verify(messageSender).sendAndSaveText(bot, 1L, "intro");
+        verify(messageSender).sendAndSaveHtmlText(bot, 1L, "intro");
         verify(messageSender, times(1)).sendAndSaveButtons(any(), anyLong(), anyString(), any(String[].class));
         verify(sessionService).setCurrentMode(1L, DialogMode.PROFILE);
     }

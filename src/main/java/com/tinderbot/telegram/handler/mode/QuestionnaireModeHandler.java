@@ -37,7 +37,7 @@ public abstract class QuestionnaireModeHandler implements ModeHandler {
 
     private void sendWelcomeScreen(MultiSessionTelegramBot bot, Long chatId, QuestionnaireProgress.Started started) {
         messageSender.sendAndSavePhoto(bot, chatId, started.photoKey());
-        messageSender.sendAndSaveText(bot, chatId, started.intro());
+        messageSender.sendAndSaveHtmlText(bot, chatId, started.intro());
         sendAndSaveBackButton(bot, chatId);
         messageSender.sendAndSaveText(bot, chatId, started.firstQuestion());
     }

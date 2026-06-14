@@ -59,13 +59,13 @@ class GptModeHandlerTest {
         when(messageView.getGptMessage()).thenReturn("GPT message");
         String[] backButton = {"Главное меню", "btn_start"};
         when(keyboardFactory.createBackToMainMenuButton()).thenReturn(backButton);
-        when(messageSender.sendAndSaveMenu(bot, chatId, "GPT message", backButton)).thenReturn(menuMsg);
+        when(messageSender.sendAndSaveHtmlMenu(bot, chatId, "GPT message", backButton)).thenReturn(menuMsg);
 
         handler.onCommand(bot, chatId);
 
         verify(messageCleaner).deleteAllMessages(chatId, bot);
         verify(messageSender).sendAndSavePhoto(bot, chatId, ResourceConstants.IMAGE_GPT);
-        verify(messageSender).sendAndSaveMenu(bot, chatId, "GPT message", backButton);
+        verify(messageSender).sendAndSaveHtmlMenu(bot, chatId, "GPT message", backButton);
         verify(sessionService).setCurrentMode(chatId, DialogMode.GPT);
     }
 

@@ -38,7 +38,7 @@ public class GptModeHandler implements com.tinderbot.telegram.api.ModeHandler {
         gptDialogService.enterGptMode(chatId);
 
         messageSender.sendAndSavePhoto(bot, chatId, ResourceConstants.IMAGE_GPT);
-        messageSender.sendAndSaveMenu(bot, chatId, messageView.getGptMessage(), keyboardFactory.createBackToMainMenuButton());
+        messageSender.sendAndSaveHtmlMenu(bot, chatId, messageView.getGptMessage(), keyboardFactory.createBackToMainMenuButton());
     }
 
     @Override

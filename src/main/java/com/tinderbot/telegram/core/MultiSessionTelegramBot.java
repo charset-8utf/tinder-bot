@@ -22,6 +22,8 @@ import java.util.Optional;
 @Slf4j
 public class MultiSessionTelegramBot extends TelegramLongPollingBot {
 
+    private static final String PARSE_MODE_HTML = "HTML";
+
     private final BotResourceLoader resourceLoader;
     private final TelegramTextTruncator textTruncator;
     private final String name;
@@ -102,23 +104,11 @@ public class MultiSessionTelegramBot extends TelegramLongPollingBot {
     }
 
     public Message sendTextMessage(String text) {
-        long underscoreCount = text != null ? text.chars().filter(c -> c == '_').count() : 0;
-        if (underscoreCount % 2 == 0) {
-            SendMessage command = createApiSendMessageCommand(String.valueOf(text));
-            return executeTelegramApiMethod(command);
-        }
-        var message = "Строка '%s' является невалидной с точки зрения markdown. Воспользуйтесь методом sendHtmlMessage()"
-                .formatted(text);
-        log.warn(message);
-        return sendHtmlMessage(message);
+        return executeTelegramApiMethod(createSendMessage(text, null));
     }
 
     public Message sendHtmlMessage(String text) {
-        SendMessage message = new SendMessage();
-        message.setText(text);
-        message.setParseMode("html");
-        message.setChatId(getCurrentChatId());
-        return executeTelegramApiMethod(message);
+        return executeTelegramApiMethod(createSendMessage(text, PARSE_MODE_HTML));
     }
 
     public Message sendPhotoMessage(String photoKey) {
@@ -139,17 +129,27 @@ public class MultiSessionTelegramBot extends TelegramLongPollingBot {
     }
 
     public Message sendTextButtonsMessage(String text, String... buttons) {
-        SendMessage command = createApiSendMessageCommand(text);
+        SendMessage command = createSendMessage(text, null);
         if (buttons.length > 0) {
             attachButtons(command, List.of(buttons));
         }
         return executeTelegramApiMethod(command);
     }
 
-    private SendMessage createApiSendMessageCommand(String text) {
+    public Message sendHtmlButtonsMessage(String text, String... buttons) {
+        SendMessage command = createSendMessage(text, PARSE_MODE_HTML);
+        if (buttons.length > 0) {
+            attachButtons(command, List.of(buttons));
+        }
+        return executeTelegramApiMethod(command);
+    }
+
+    private SendMessage createSendMessage(String text, String parseMode) {
         SendMessage message = new SendMessage();
         message.setText(text);
-        message.setParseMode("markdown");
+        if (parseMode != null) {
+            message.setParseMode(parseMode);
+        }
         message.setChatId(getCurrentChatId());
         return message;
     }

@@ -51,7 +51,7 @@ class MainModeHandlerTest {
         when(messageView.getMenuTitle()).thenReturn(menuTitle);
         when(keyboardFactory.createMainMenuButtons()).thenReturn(mainMenuButtons);
         when(messageSender.sendAndSavePhoto(bot, chatId, ResourceConstants.IMAGE_MAIN)).thenReturn(mock(Message.class));
-        when(messageSender.sendAndSaveText(bot, chatId, welcomeText)).thenReturn(mock(Message.class));
+        when(messageSender.sendAndSaveHtmlText(bot, chatId, welcomeText)).thenReturn(mock(Message.class));
         when(messageSender.sendAndSaveMenu(bot, chatId, menuTitle, mainMenuButtons)).thenReturn(mock(Message.class));
 
         handler.onCommand(bot, chatId);
@@ -59,7 +59,7 @@ class MainModeHandlerTest {
         verify(messageCleaner).deleteAllMessages(chatId, bot);
         verify(mainMenuService).openMainMenu(chatId);
         verify(messageSender).sendAndSavePhoto(bot, chatId, ResourceConstants.IMAGE_MAIN);
-        verify(messageSender).sendAndSaveText(bot, chatId, welcomeText);
+        verify(messageSender).sendAndSaveHtmlText(bot, chatId, welcomeText);
         verify(messageSender).sendAndSaveMenu(bot, chatId, menuTitle, mainMenuButtons);
     }
 
