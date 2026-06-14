@@ -277,7 +277,7 @@ Integration-тесты (заменяют shell smoke-сценарии):
 ## Структура репозитория
 
 ```text
-TinderBolt-v6/
+tinder-bot/
 ├── pom.xml
 ├── Dockerfile
 ├── docker-compose.yml
