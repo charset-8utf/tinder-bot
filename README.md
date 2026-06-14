@@ -69,6 +69,16 @@ REST-клиент ── /api/v1/* ──► REST controllers ┤
 
 Telegram и REST используют общий слой `service/` и хранят состояние сессии в PostgreSQL.
 
+### Форматирование Telegram-сообщений
+
+| Тип текста | Как отправляется | Примеры |
+|------------|------------------|---------|
+| Шаблоны из `resources/messages/` | HTML (`parse_mode: HTML`) | приветствие, intro PROFILE/OPENER/GPT |
+| Статусы, вопросы опросника, ошибки | plain text | «ChatGPT думает...», «Сколько вам лет?» |
+| Ответы GPT | plain text (`updateTextMessage`) | сгенерированный профиль, opener, переписка |
+
+Шаблоны используют теги `<b>`, `</b>`. Ответы GPT и пользовательский ввод **не** прогоняются через разметку — так меньше риск, что Telegram отклонит сообщение из‑за спецсимволов.
+
 ---
 
 ## Security
@@ -336,10 +346,21 @@ tinder-bot/
 ## Полезные команды
 
 ```bash
+docker compose up --build -d    # пересобрать и запустить в фоне
+docker compose ps               # статус контейнеров (ожидается healthy)
 docker compose logs -f app
 docker compose down
 docker compose down -v          # пересоздать БД (сброс кредов из .env)
-mvn clean test                  # REST smoke-сценарии
+mvn clean test                  # unit + integration
+```
+
+Быстрая проверка после Docker-старта:
+
+```bash
+curl -s http://localhost:8080/actuator/health
+curl -s -X POST http://localhost:8080/api/v1/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"demo","password":"password"}'
 ```
 
 ---
