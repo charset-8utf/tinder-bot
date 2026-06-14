@@ -1,0 +1,123 @@
+spring:
+  application:
+    name: tinderbot
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  jpa:
+    open-in-view: false
+
+info:
+  app:
+    description: TinderBot — Telegram-бот для знакомств с REST API
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
+tinderbot:
+  api:
+    security:
+      enabled: ${API_SECURITY_ENABLED:false}
+      jwt:
+        secret: ${JWT_SECRET:demo-only-jwt-secret-change-me-in-real-projects-32-plus-chars}
+        expiration-minutes: ${JWT_EXPIRATION_MINUTES:60}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+
+resilience4j:
+  retry:
+    instances:
+      chatGpt:
+        max-attempts: 1
+        wait-duration: 1s
+  ratelimiter:
+    instances:
+      textGeneration:
+        limit-for-period: 30
+        limit-refresh-period: 1m
+        timeout-duration: 0
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/tinderbot}
+    username: ${SPRING_DATASOURCE_USERNAME:tinderbot}
+    password: ${SPRING_DATASOURCE_PASSWORD:tinderbot}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+  flyway:
+    enabled: true
+
+telegram:
+  bot:
+    name: ${TELEGRAM_BOT_NAME:tinderbot-local}
+    token: ${TELEGRAM_BOT_TOKEN:}
+    register: ${TELEGRAM_BOT_REGISTER:true}
+
+openai:
+  token: ${OPENAI_TOKEN:}
+  api-host: ${OPENAI_API_HOST:https://api.openai.com/}
+  model: ${OPENAI_MODEL:gpt-3.5-turbo}
+  max-tokens: ${OPENAI_MAX_TOKENS:8192}
+  read-timeout-seconds: ${OPENAI_READ_TIMEOUT_SECONDS:1200}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/tinderbot}
+    username: ${SPRING_DATASOURCE_USERNAME:tinderbot}
+    password: ${SPRING_DATASOURCE_PASSWORD:tinderbot}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+  flyway:
+    enabled: true
+
+telegram:
+  bot:
+    name: ${TELEGRAM_BOT_NAME:}
+    token: ${TELEGRAM_BOT_TOKEN:}
+    register: ${TELEGRAM_BOT_REGISTER:true}
+
+openai:
+  token: ${OPENAI_TOKEN:}
+  api-host: ${OPENAI_API_HOST:https://api.openai.com/}
+  model: ${OPENAI_MODEL:gpt-3.5-turbo}
+  max-tokens: ${OPENAI_MAX_TOKENS:8192}
+  read-timeout-seconds: ${OPENAI_READ_TIMEOUT_SECONDS:1200}
+
+tinderbot:
+  api:
+    security:
+      enabled: ${API_SECURITY_ENABLED:true}
+
+logging:
+  structured:
+    format:
+      console: ecs
+
+---

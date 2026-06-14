@@ -1,0 +1,17 @@
+# .env — локальные секреты (не коммитить)
+.env
+requests/http-client.private.env.json
+
+# Maven / IDE
+target/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
